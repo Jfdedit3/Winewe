@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
@@ -46,9 +47,7 @@ fun WinlatorLikeHomeScreen(
             }
         }
 
-        item {
-            Text("Containers", style = MaterialTheme.typography.titleLarge)
-        }
+        item { Text("Containers", style = MaterialTheme.typography.titleLarge) }
 
         items(containers) { container ->
             Card(modifier = Modifier.fillMaxWidth()) {
@@ -57,7 +56,7 @@ fun WinlatorLikeHomeScreen(
                     Spacer(modifier = Modifier.height(6.dp))
                     Text("Wine: ${container.wineVersion}")
                     Text("RootFS: ${container.rootfsName}")
-                    Text("Graphics: ${container.graphicsDriver.displayName}")
+                    Text("Graphics: ${container.graphicsBackend.displayName}")
                     Text("Preset: ${container.box64Preset.displayName}")
                     Text("Screen: ${container.screenWidth}x${container.screenHeight} @ ${container.dpi} dpi")
                     Spacer(modifier = Modifier.height(10.dp))
@@ -68,13 +67,16 @@ fun WinlatorLikeHomeScreen(
             }
         }
 
-        item {
-            Text("Shortcuts", style = MaterialTheme.typography.titleLarge)
-        }
+        item { Text("Shortcuts", style = MaterialTheme.typography.titleLarge) }
 
         items(shortcuts) { shortcut ->
             Card(modifier = Modifier.fillMaxWidth()) {
-                Row(modifier = Modifier.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(shortcut.name, style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(6.dp))

@@ -4,30 +4,23 @@ import android.content.Context
 import com.jfdedit3.winewe.model.ContainerProfile
 import java.io.File
 
-class RuntimeBootstrap(
-    private val context: Context,
-    private val layout: RuntimeLayout = RuntimeLayout(context)
-) {
-    fun prepareContainer(container: ContainerProfile): Result<String> {
-        return runCatching {
-            layout.ensureBaseLayout()
+class RuntimeBootstrap(private val context: Context) {
+    private val runtimeRoot = File(context.filesDir, "runtime")
 
-            val containerDir = layout.containerDir(container.id)
-            val prefixDir = layout.prefixDir(container.id)
-            val drivesDir = layout.drivesDir(container.id)
-            val scriptsDir = layout.scriptsDir(container.id)
-            val configDir = layout.configDir(container.id)
+    fun prepareContainer(container: ContainerProfile): Result<String> = runCatching {
+        val containerDir = File(runtimeRoot, "containers/${container.id}")
+        val prefixDir = File(containerDir, "prefix")
+        val driveDir = File(containerDir, "drive_c")
+        val scriptsDir = File(containerDir, "scripts")
 
-            listOf(containerDir, prefixDir, drivesDir, scriptsDir, configDir).forEach {
-                if (!it.exists()) it.mkdirs()
-            }
-
-            val desktop = File(drivesDir, "desktop")
-            val downloads = File(drivesDir, "downloads")
-            desktop.mkdirs()
-            downloads.mkdirs()
-
-            "Container prepared at ${containerDir.absolutePath}"
+        listOf(runtimeRoot, containerDir, prefixDir, driveDir, scriptsDir).forEach {
+            if (!it.exists()) it.mkdirs()
         }
+
+        File(scriptsDir, "launch.sh").writeText(
+            "# placeholder launcher for ${container.name}\n"
+        )
+
+        "Container prepared: ${container.name}\nPath: ${containerDir.absolutePath}"
     }
 }
